@@ -49,13 +49,7 @@ REM ----===== end of function =====----
 
 :pipeline
 
-SET jump=polyfill
-CALL :exec_msbuild "../Polyfill/" "./Polyfill.sln"
-:polyfill
-
-SET jump=end_msi_analysis
-CALL :exec_msbuild "../MSI_analysis/" "./MSI_analysis.sln"
-:end_msi_analysis
+REM mzkit libraries for MS data analysis
 
 SET jump=end_ms_imaging
 CALL :exec_msbuild "../ms-imaging/" "./MSImaging.sln"
