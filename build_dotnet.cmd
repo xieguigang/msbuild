@@ -7,6 +7,8 @@ SET base=%~d0
 SET msbuild_logger=%CD%/logs/
 SET jump=pipeline
 
+mkdir %msbuild_logger%
+
 echo "root directory is %base%"
 
 REM mzkit source dir
