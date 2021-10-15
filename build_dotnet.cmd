@@ -16,9 +16,15 @@ SET mzkit_src=%base%/mzkit/Rscript/Library
 REM gcmodeller source dir
 SET gcmodeller_src=%base%/GCModeller/src
 
+@echo:
+
 echo "libraries folder:"
 echo "1. mzkit: %mzkit_src%"
 echo "2. gcmodeller: %gcmodeller_src%"
+
+@echo:
+echo -------------------------------------------------
+@echo:
 
 REM if the argument is exists in the commandline
 REM then just run build of the R# packages
@@ -42,17 +48,21 @@ SET _sln=%2
 SET logfile="%msbuild_logger%/%_sln%.txt"
 
 echo "build %_sln% package"
+echo "VisualStudio source folder: %_src%"
 
 REM clean works and rebuild libraries
-cd %base%
 cd %_src%
 dotnet msbuild ./%_sln% -target:Clean
 dotnet msbuild ./%_sln% -t:Rebuild /p:Configuration="Rsharp_app_release" /p:Platform="x64" -detailedSummary:True -verbosity:minimal > %logfile% & type %logfile%
-cd %base%
 
-echo ""
-echo ""
+@echo:
 echo "build package %_sln% job done!"
+@echo:
+@echo:
+@echo:
+echo -----------------------------------------------------
+@echo:
+@echo:
 
 ENDLOCAL & SET _result=0
 goto :%jump%
@@ -64,29 +74,29 @@ REM ----===== end of function =====----
 REM mzkit libraries for MS data analysis
 
 SET jump=end_ms_imaging
-CALL :exec_msbuild "%mzkit_src%/MSI_app/" "./MSImaging.sln"
+CALL :exec_msbuild %mzkit_src%/MSI_app/ "./MSImaging.sln"
 :end_ms_imaging
 
 REM build of the mzkit library
 SET jump=mzkit
-CALL :exec_msbuild "%mzkit_src%/" "./mzkit.NET5.sln"
+CALL :exec_msbuild %mzkit_src%/ "./mzkit.NET5.sln"
 :mzkit
 
 REM build of the GCModeller library
 SET base=%gcmodeller_src%
 
 SET jump=renv
-CALL :exec_msbuild "R-sharp" "./R_system.NET5.sln"
+CALL :exec_msbuild R-sharp "./R_system.NET5.sln"
 :renv
 
 SET jump=gcmodeller
-CALL :exec_msbuild "workbench/R#" "./packages.NET5.sln"
+CALL :exec_msbuild workbench/R# "./packages.NET5.sln"
 :gcmodeller
 
 SET jump=ggplot
-CALL :exec_msbuild "runtime/ggplot" "./ggplot.NET5.sln"
+CALL :exec_msbuild runtime/ggplot "./ggplot.NET5.sln"
 :ggplot
-
+pause
 echo ""
 echo "run msbuild for publish R# package done!"
 
