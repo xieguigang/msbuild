@@ -48,19 +48,22 @@ SET _sln=%2
 SET logfile="%msbuild_logger%/%_sln%.txt"
 
 echo "build %_sln% package"
-echo "VisualStudio source folder: %_src%"
+echo "  --> %_src%"
 
 REM clean works and rebuild libraries
 cd %_src%
-dotnet msbuild ./%_sln% -target:Clean
-dotnet msbuild ./%_sln% -t:Rebuild /p:Configuration="Rsharp_app_release" /p:Platform="x64" -detailedSummary:True -verbosity:minimal > %logfile% & type %logfile%
+
+echo "VisualStudio work folder: %CD%"
+
+dotnet msbuild %_sln% -target:Clean
+dotnet msbuild %_sln% -t:Rebuild /p:Configuration="Rsharp_app_release" /p:Platform="x64" -detailedSummary:True -verbosity:minimal > %logfile% & type %logfile%
 
 @echo:
 echo "build package %_sln% job done!"
 @echo:
 @echo:
 @echo:
-echo -----------------------------------------------------
+echo --------------------------------------------------------
 @echo:
 @echo:
 
@@ -86,19 +89,22 @@ REM build of the GCModeller library
 SET base=%gcmodeller_src%
 
 SET jump=renv
-CALL :exec_msbuild R-sharp "./R_system.NET5.sln"
+CALL :exec_msbuild %gcmodeller_src%/R-sharp "./R_system.NET5.sln"
 :renv
 
 SET jump=gcmodeller
-CALL :exec_msbuild workbench/R# "./packages.NET5.sln"
+CALL :exec_msbuild %gcmodeller_src%/workbench/R# "./packages.NET5.sln"
 :gcmodeller
 
 SET jump=ggplot
-CALL :exec_msbuild runtime/ggplot "./ggplot.NET5.sln"
+CALL :exec_msbuild %gcmodeller_src%/runtime/ggplot "./ggplot.NET5.sln"
 :ggplot
+
 pause
-echo ""
+
+@echo:
 echo "run msbuild for publish R# package done!"
+@echo:
 
 goto :build_Rpackages
 
@@ -137,9 +143,12 @@ echo "  --> package_release: %pkg_release%/%_pkg%"
 %Rscript% --build /src "%_src%" /save "%pkg_release%/%_pkg%"
 %REnv% --install.packages "%pkg_release%/%_pkg%"
 
-echo ""
-echo ""
+@echo:
+@echo:
 echo "build package %_pkg% job done!"
+@echo:
+@echo:
+@echo:
 
 ENDLOCAL & SET _result=0
 goto :%jump%
