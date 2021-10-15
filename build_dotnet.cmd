@@ -3,11 +3,20 @@
 REM run build of the dotnet core 5 assembly packages for build R# package
 
 REM get current work directory
-SET base=%CD%
-SET msbuild_logger=%base%/logs/
+SET base=%~d0
+SET msbuild_logger=%CD%/logs/
 SET jump=pipeline
+
 echo "root directory is %base%"
 
+REM mzkit source
+SET mzkit_src=%base%/mzkit/Rscript/Library
+SET gcmodeller_src=%base%/GCModeller/src
+
+echo "libraries folder:"
+echo "1. mzkit: %mzkit_src%"
+echo "2. gcmodeller: %gcmodeller_src%"
+pause
 REM if the argument is exists in the commandline
 REM then just run build of the R# packages
 REM skip build of the .NET 5 assembly files.
