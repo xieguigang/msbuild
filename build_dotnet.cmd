@@ -55,8 +55,8 @@ cd %_src%
 
 echo "VisualStudio work folder: %CD%"
 
-dotnet msbuild %_sln% -target:Clean
-dotnet msbuild %_sln% -t:Rebuild /p:Configuration="Rsharp_app_release" /p:Platform="x64" -detailedSummary:True -verbosity:minimal > %logfile% & type %logfile%
+dotnet msbuild %_src%/%_sln% -target:Clean
+dotnet msbuild %_src%/%_sln% -t:Rebuild /p:Configuration="Rsharp_app_release" /p:Platform="x64" -detailedSummary:True -verbosity:minimal > %logfile% & type %logfile%
 
 @echo:
 echo "build package %_sln% job done!"
@@ -77,27 +77,27 @@ REM ----===== end of function =====----
 REM mzkit libraries for MS data analysis
 
 SET jump=end_ms_imaging
-CALL :exec_msbuild %mzkit_src%/MSI_app/ "./MSImaging.sln"
+CALL :exec_msbuild %mzkit_src%/MSI_app/ MSImaging.sln
 :end_ms_imaging
 
 REM build of the mzkit library
 SET jump=mzkit
-CALL :exec_msbuild %mzkit_src%/ "./mzkit.NET5.sln"
+CALL :exec_msbuild %mzkit_src%/ mzkit.NET5.sln
 :mzkit
 
 REM build of the GCModeller library
 SET base=%gcmodeller_src%
 
 SET jump=renv
-CALL :exec_msbuild %gcmodeller_src%/R-sharp "./R_system.NET5.sln"
+CALL :exec_msbuild %gcmodeller_src%/R-sharp R_system.NET5.sln
 :renv
 
 SET jump=gcmodeller
-CALL :exec_msbuild %gcmodeller_src%/workbench/R# "./packages.NET5.sln"
+CALL :exec_msbuild %gcmodeller_src%/workbench/R# packages.NET5.sln
 :gcmodeller
 
 SET jump=ggplot
-CALL :exec_msbuild %gcmodeller_src%/runtime/ggplot "./ggplot.NET5.sln"
+CALL :exec_msbuild %gcmodeller_src%/runtime/ggplot ggplot.NET5.sln
 :ggplot
 
 pause
