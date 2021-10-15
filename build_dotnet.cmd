@@ -1,10 +1,16 @@
 @echo off
 
+REM run build of the dotnet core 5 assembly packages for build R# package
+
+REM get current work directory
 SET base=%CD%
-SET msbuild_logger=D:\biodeep\biodeepdb_v3\spatial\msbuild\logs
+SET msbuild_logger=%base%/logs/
 SET jump=pipeline
 echo "root directory is %base%"
 
+REM if the argument is exists in the commandline
+REM then just run build of the R# packages
+REM skip build of the .NET 5 assembly files.
 if "%1"=="--Rpackage" (
 	goto :jump_to_build_Rpackages
 )
@@ -14,6 +20,11 @@ goto :%jump%
 REM ----===== msbuild function =====----
 :exec_msbuild
 SETLOCAL
+
+REM the function accept two required parameters
+REM 
+REM 1. the relative path of the package source folder
+REM 2. the filename of the target VisualStudio solution file to run msbuild
 SET _src=%1
 SET _sln=%2
 SET logfile="%msbuild_logger%/%_sln%.txt"
