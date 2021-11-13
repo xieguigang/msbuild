@@ -101,7 +101,7 @@ SET jump=ggplot
 CALL :exec_msbuild %gcmodeller_src%\runtime\ggplot ggplot.NET5.sln
 :ggplot
 
-pause
+REM pause
 
 @echo:
 echo "run msbuild for publish R# package done!"
@@ -141,7 +141,7 @@ echo "build '%_pkg%' package..."
 echo "  --> source:  %_src%"
 echo "  --> package_release: %pkg_release%\%_pkg%"
 
-%Rscript% --build /src "%_src%" /save "%pkg_release%\%_pkg%"
+%Rscript% --build /src "%_src%" /save "%pkg_release%\%_pkg%" --skip-src-build
 %REnv% --install.packages "%pkg_release%\%_pkg%"
 
 @echo:
